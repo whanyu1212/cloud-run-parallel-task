@@ -20,6 +20,16 @@ def process_batch(batch_start, batch_size):
             FROM `bigquery-public-data.covid19_open_data.covid19_open_data`
             LIMIT {batch_size} OFFSET {batch_start}
         """
+        # Alternatively, if you want to split the batches by identifier, you can do the following:
+        # batch_keys = key_identifiers[batch_start:batch_start + batch_size]
+        # keys_string = ','.join([f"'{key}'" for key in batch_keys])
+
+        # query = f"""
+        #     SELECT *
+        #     FROM `bigquery-public-data.covid19_open_data.covid19_open_data`
+        #     WHERE key IN ({keys_string})
+        # """
+
         query_job = bq_client.query(query)
         df = query_job.to_dataframe()
 
