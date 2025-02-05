@@ -1,0 +1,12 @@
+docker build -t parallel-processor .
+
+docker tag parallel-processor us-central1-docker.pkg.dev/fleet-anagram-244304/parallel-processor/parallel-processor:latest
+docker push us-central1-docker.pkg.dev/fleet-anagram-244304/parallel-processor/parallel-processor:latest
+
+gcloud run jobs create parallel-bq-processor \
+    --image us-central1-docker.pkg.dev/fleet-anagram-244304/parallel-processor/parallel-processor:latest \
+    --region us-central1 \
+    --tasks 10 \
+    --parallelism 5
+
+gcloud run jobs execute parallel-bq-processor
