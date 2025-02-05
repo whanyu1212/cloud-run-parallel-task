@@ -1,12 +1,19 @@
 docker build -t parallel-processor .
 
+# Tag registry requirement format:
+LOCATION-docker.pkg.dev/PROJECT-ID/REPOSITORY/IMAGE:TAG
+# you can assign versions and push multiple tags if you need
 docker tag parallel-processor us-central1-docker.pkg.dev/fleet-anagram-244304/parallel-processor/parallel-processor:latest
+
+# Push the docker image to the dedicated repository set up in container registry
 docker push us-central1-docker.pkg.dev/fleet-anagram-244304/parallel-processor/parallel-processor:latest
 
+# CLI command
 gcloud run jobs create parallel-bq-processor \
     --image us-central1-docker.pkg.dev/fleet-anagram-244304/parallel-processor/parallel-processor:latest \
     --region us-central1 \
     --tasks 10 \
     --parallelism 5
 
+# CLI command
 gcloud run jobs execute parallel-bq-processor
